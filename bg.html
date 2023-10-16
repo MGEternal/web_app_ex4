@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+    <div id="maincontainer"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var flag = false;
+            var flagt = false;
+            var h1Element = document.createElement("h3");
+            var textNode = document.createTextNode("Exercise 04: JavaScript & DOM");
+            h1Element.appendChild(textNode);
+            document.body.appendChild(h1Element);
+
+            var BtnTime = document.createElement("button");
+            BtnTime.id = "startButton";
+            BtnTime.textContent = "Click me to display Date and time";
+            document.body.appendChild(BtnTime);
+
+            // Create the web worker
+            var worker = new Worker('worker.js');
+            var lastFormattedTime = "Click me to display Date and time"; // Initialize with the default text
+            var btnColorIndex = 0; // Index of the current button color
+            var btnColors = ["red", "green", "blue", "orange", "purple", "pink"]; // List of 6 button colors
+
+            worker.addEventListener('message', (e) => {
+                // Display the formatted time in your HTML or console
+                const formattedTime = e.data;
+                console.log(formattedTime);
+                // Change the button text to the received message
+                BtnTime.textContent = formattedTime;
+                lastFormattedTime = formattedTime; // Update the last received data
+            });
+
+            // Function to change button text color every second in a loop
+            function changeButtonTextColorLoop() {
+                setInterval(function() {
+                    if (workerRunning) {
+                        BtnTime.style.backgroundColor = btnColors[btnColorIndex]; // Set the button text color
+                        btnColorIndex = (btnColorIndex + 1) % btnColors.length; // Increment index and loop
+                        BtnTime.style.position = "fixed"; // Make the button's position fixed
+                        BtnTime.style.top = "0"; // Set the top position to 0 (top of the page)
+                        BtnTime.style.right = "0";
+                    }else{
+                        BtnTime.style.position = "static"; // Reset the position to static
+                        BtnTime.style.top = ""; // Remove the top property
+                        BtnTime.style.right = "";
+                    }
+                }, 1000); // Change color every 1000 milliseconds (1 second)
+            }
+
+            // Variable to track whether the worker is running
+            var workerRunning = false;
+
+            // Event listener for 'startButton'
+            BtnTime.addEventListener('click', () => {
+                if (BtnTime.id === "startButton") {
+                    BtnTime.id = "stopButton";
+                    worker.postMessage('start');
+                    workerRunning = true; // Worker is running
+                    changeButtonTextColorLoop(); // Start changing button text color in a loop
+                } else {
+                    BtnTime.id = "startButton";
+                    worker.postMessage('stop');
+                    workerRunning = false; // Worker is stopped
+                    // Set the button text to the last received data
+                    BtnTime.textContent = lastFormattedTime;
+                }
+            });
+
+            var pp = document.createElement("p");
+            var h1Element2 = document.createElement("a");
+            var textNode2 = document.createTextNode("Personal Info");
+            h1Element2.style.textDecoration = "underline";
+
+            // Add a click event listener to h1Element2
+            h1Element2.addEventListener("click", function() {
+                flag = !flag; // Toggle the flag variable
+                if (flag) {
+                    info_ui.style.display = "block";
+                } else {
+                    info_ui.style.display = "none";
+                }
+            });
+
+            pp.appendChild(h1Element2);
+            h1Element2.appendChild(textNode2);
+            document.body.appendChild(pp);
+
+            // Initially, hide the info_ui based on the flag
+            var info_ui = document.createElement("ul");
+            var info_li1 = document.createElement("li");
+            var info_li2 = document.createElement("li");
+            var info_li3 = document.createElement("li");
+            var textinfo1 = document.createTextNode("Kritsada Saekua, ID: 65015004");
+            var textinfo2 = document.createTextNode("Subject: Web application");
+            var textinfo3 = document.createTextNode("Semester: 1/2566");
+            info_li1.appendChild(textinfo1);
+            info_li2.appendChild(textinfo2);
+            info_li3.appendChild(textinfo3);
+            info_ui.appendChild(info_li1);
+            info_ui.appendChild(info_li2);
+            info_ui.appendChild(info_li3);
+            document.body.appendChild(info_ui);
+
+            if (flag) {
+                info_ui.style.display = "block";
+            } else {
+                info_ui.style.display = "none";
+            }
+
+            var h2Element = document.createElement("h1");
+            var textNode3 = document.createTextNode("Snapshots");
+            h2Element.appendChild(textNode3);
+            document.body.appendChild(h2Element);
+
+            var ulElement = document.createElement("ul");
+
+            // li 1
+            var liElement1 = document.createElement("li");
+            var at1 = document.createElement("a");
+            at1.href = "#";
+            var liText1 = document.createTextNode("China");
+            at1.style.fontWeight = "bold";
+            at1.appendChild(liText1);
+            liElement1.appendChild(at1);
+            ulElement.appendChild(liElement1);
+
+            // li 2
+            var liElement2 = document.createElement("li");
+            var at2 = document.createElement("a");
+            at2.href = "#";
+            var liText2 = document.createTextNode("France");
+            at2.style.fontWeight = "bold";
+            at2.appendChild(liText2);
+            liElement2.appendChild(at2);
+            ulElement.appendChild(liElement2);
+
+            // li 3
+            var liElement3 = document.createElement("li");
+            var at3 = document.createElement("a");
+            at3.href = "#";
+            var liText3 = document.createTextNode("USA");
+            at3.style.fontWeight = "bold";
+            at3.appendChild(liText3);
+            liElement3.appendChild(at3);
+            ulElement.appendChild(liElement3);
+            
+            // li 4
+            var liElement4 = document.createElement("li");
+            var at4 = document.createElement("a");
+            at4.href = "#";
+            var liText4 = document.createTextNode("Japan");
+            at4.style.fontWeight = "bold";
+            at4.appendChild(liText4);
+            liElement4.appendChild(at4);
+            ulElement.appendChild(liElement4);
+
+            // Append the <ul> element to the body
+            document.body.appendChild(ulElement);
+
+            var img = document.createElement("img");
+            img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Ls2LH_xjmWFsXlYZTbipzCyBu6jXglnEJA&usqp=CAU";
+            img.width = "200"; // Set the width of the image.
+            document.body.appendChild(img);
+
+            // Add an event listener to the button
+            at1.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVtSwiAE2P7KCbKj4vf7vxEymKC533hVUQTA&usqp=CAU";
+            });
+            at2.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCSuUs94Rtwf4YhbbYapdBW5XFlrB832PGkw&usqp=CAU";
+            });
+            at3.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyASinjTxkmCC86b09w5lUw9BW2ZPJUvz18g&usqp=CAU";
+            });
+            at4.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ6pR6tioljvCBkM9OT-KaWxL-wuC2B4O8OQ&usqp=CAU";
+            });
+
+            h1Element2.addEventListener("mouseover", function() {
+                h1Element2.style.backgroundColor = "red";
+            });
+            h1Element2.addEventListener("mouseout", function() {
+                h1Element2.style.backgroundColor = "";
+            });
+        });
+        document.body.style.backgroundColor = "#DCDCDC";
+    </script>
+</body>
+
+</html>

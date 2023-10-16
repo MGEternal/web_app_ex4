@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+    <div id="maincontainer"></div>
+    <script>
+        let worker = null; // Declare worker outside of the DOMContentLoaded event listener
+        var flag = false;
+        var flagt = false;
+
+        // Define createWorker and terminateWorker functions
+        function createWorker() {
+            if (worker === null) {
+                worker = new Worker('worker.js'); // Replace 'worker.js' with the path to your worker script
+                console.log('Worker created');
+            } else {
+                console.log('Worker already exists');
+            }
+        }
+
+        function terminateWorker() {
+            if (worker !== null) {
+                worker.terminate();
+                worker = null;
+                console.log('Worker terminated');
+            } else {
+                console.log('Worker does not exist');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var h1Element = document.createElement("h3");
+            var textNode = document.createTextNode("Exercise 04: JavaScript & DOM");
+            h1Element.appendChild(textNode);
+            document.body.appendChild(h1Element);
+
+            var BtnTime = document.createElement("button");
+            BtnTime.id = "startButton";
+            BtnTime.textContent = "Click me to display Date and time";
+            document.body.appendChild(BtnTime);
+
+            var colors = ['red', 'blue', 'green', 'orange', 'purple', 'teal'];
+            var colorIndex = 0;
+
+            var lastFormattedTime = "Click me to display Date and time";
+            createWorker(); // Create the worker here
+
+            worker.addEventListener('message', (e) => {
+                const formattedTime = e.data;
+                console.log(formattedTime);
+
+                BtnTime.textContent = formattedTime;
+                lastFormattedTime = formattedTime;
+                BtnTime.style.position = "fixed";
+                BtnTime.style.top = "0";
+                BtnTime.style.right = "0";
+                BtnTime.style.backgroundColor = colors[colorIndex];
+                colorIndex = (colorIndex + 1) % colors.length;
+            });
+            // Event listener for 'startButton'
+            BtnTime.addEventListener('click', () => {
+                if (BtnTime.id === "startButton") {
+                    BtnTime.id = "stopButton";
+                    worker.postMessage('start');
+                } else {
+                    BtnTime.id = "startButton";
+                    worker.postMessage('stop');
+                    BtnTime.textContent = lastFormattedTime;
+                    BtnTime.style.position = "static";
+                    BtnTime.style.top = "";
+                    BtnTime.style.right = "";
+                    BtnTime.style.backgroundColor = colors[0];
+                    colorIndex = 1;
+                }
+            });
+
+            var pp = document.createElement("p");
+            var h1Element2 = document.createElement("a");
+            var textNode2 = document.createTextNode("Personal Info");
+            h1Element2.style.textDecoration = "underline";
+
+            h1Element2.addEventListener("click", function () {
+                flag = !flag;
+                if (flag) {
+                    info_ui.style.display = "block";
+                } else {
+                    info_ui.style.display = "none";
+                }
+            });
+
+            pp.appendChild(h1Element2);
+            h1Element2.appendChild(textNode2);
+            document.body.appendChild(pp);
+            var info_ui = document.createElement("ul");
+            var info_li1 = document.createElement("li");
+            var info_li2 = document.createElement("li");
+            var info_li3 = document.createElement("li");
+            var textinfo1 = document.createTextNode("Kritsada Saekua, ID: 65015004");
+            var textinfo2 = document.createTextNode("Subject: Web application");
+            var textinfo3 = document.createTextNode("Semester: 1/2566");
+            info_li1.appendChild(textinfo1);
+            info_li2.appendChild(textinfo2);
+            info_li3.appendChild(textinfo3);
+            info_ui.appendChild(info_li1);
+            info_ui.appendChild(info_li2);
+            info_ui.appendChild(info_li3);
+            document.body.appendChild(info_ui);
+            if (flag) {
+                info_ui.style.display = "block";
+            } else {
+                info_ui.style.display = "none";
+            }
+            var h2Element = document.createElement("h1");
+            var textNode3 = document.createTextNode("Snapshots");
+            h2Element.appendChild(textNode3);
+            document.body.appendChild(h2Element);
+            var ulElement = document.createElement("ul");
+            // li 1
+            var liElement1 = document.createElement("li");
+            var at1 = document.createElement("a");
+            at1.href = "#";
+            var liText1 = document.createTextNode("China");
+            at1.style.fontWeight = "bold";
+            at1.appendChild(liText1);
+            liElement1.appendChild(at1);
+            ulElement.appendChild(liElement1);
+
+            // li 2
+            var liElement2 = document.createElement("li");
+            var at2 = document.createElement("a");
+            at2.href = "#";
+            var liText2 = document.createTextNode("France");
+            at2.style.fontWeight = "bold";
+            at2.appendChild(liText2);
+            liElement2.appendChild(at2);
+            ulElement.appendChild(liElement2);
+
+            // li 3
+            var liElement3 = document.createElement("li");
+            var at3 = document.createElement("a");
+            at3.href = "#";
+            var liText3 = document.createTextNode("USA");
+            at3.style.fontWeight = "bold";
+            at3.appendChild(liText3);
+            liElement3.appendChild(at3);
+            ulElement.appendChild(liElement3);
+
+            // li 4
+            var liElement4 = document.createElement("li");
+            var at4 = document.createElement("a");
+            at4.href = "#";
+            var liText4 = document.createTextNode("Japan");
+            at4.style.fontWeight = "bold";
+            at4.appendChild(liText4);
+            liElement4.appendChild(at4);
+            ulElement.appendChild(liElement4);
+
+            document.body.appendChild(ulElement);
+
+            var img = document.createElement("img");
+            img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Ls2LH_xjmWFsXlYZTbipzCyBu6jXglnEJA&usqp=CAU";
+            img.width = "200"; 
+            document.body.appendChild(img);
+
+            
+            at1.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVtSwiAE2P7KCbKj4vf7vxEymKC533hVUQTA&usqp=CAU";
+            });
+            at2.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCSuUs94Rtwf4YhbbYapdBW5XFlrB832PGkw&usqp=CAU";
+            });
+            at3.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyASinjTxkmCC86b09w5lUw9BW2ZPJUvz18g&usqp=CAU";
+            });
+            at4.addEventListener("click", function() {
+                img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ6pR6tioljvCBkM9OT-KaWxL-wuC2B4O8OQ&usqp=CAU";
+            });
+
+            h1Element2.addEventListener("mouseover", function() {
+                h1Element2.style.backgroundColor = "red";
+            });
+            h1Element2.addEventListener("mouseout", function() {
+                h1Element2.style.backgroundColor = "";
+            });
+        });
+        document.body.style.backgroundColor = "#DCDCDC";
+    </script>
+</body>
+
+</html>
